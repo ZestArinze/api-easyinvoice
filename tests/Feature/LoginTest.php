@@ -2,46 +2,53 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
-class SignUpTest extends TestCase
+class LoginTest extends TestCase
 {
     use RefreshDatabase;
 
+    private $commonHeaders = [
+        'Accept'        => 'application/json',
+        // 'Content-Type'  => 'application/json',
+    ];
+
+    private string $password = 'secret';
+    private User $user;
+
     public function setUp(): void {
         parent::setUp();
+
+        $this->user = User::factory()->create(['password' => bcrypt($this->password)]);
     }
 
     /**
      * 
      * @test
      * 
-     * user registration input validation test
-     * 
      * @return void
      */
-    public function signup_failure_mustSupplyRequiredFields() {
+    public function login_failure_mustSupplyRequiredFields() {
 
         $data = [
-            'name' => 'John Doe',
-            'email' => 'someone@example.com',
-            'password' => 'secret',
-            'password_confirmation' => 'secret',
+            'email' => $this->user->email,
+            'password' => $this->password,
         ];
 
         // arrange
         collect([
-            'name', 'email', 'password', 
+            'email', 'password', 
         ])->each(function($field) use ($data) {
             
             // arrange
             $reqBody = array_merge($data, [$field => '']);
 
             // act
-            $response = $this->post('/api/auth/signup', $reqBody);
+            $response = $this->post('/api/auth/login', $reqBody, $this->commonHeaders);
 
             // assert
             $response->assertJson([
@@ -57,39 +64,37 @@ class SignUpTest extends TestCase
         });
     }
 
+
     /**
-     * 
      * @test
      * 
-     * User registration test
+     * Login
      *
      * @return void
      */
-    public function register_success_userAccountCreated()
+    public function login_success_userAuthTokenIssued()
     {
-        $this->withoutExceptionHandling();
+        // $this->withoutExceptionHandling();
 
-        $name = 'Arinze Zest';
-        $email = 'arinze@zest.com'; 
+        $reqBody = [
+            'email' => $this->user->email,
+            'password' => $this->password,
+        ];
 
-        $response = $this->post('/api/auth/signup', [
-            'name' => $name,
-            'email' => $email,
-            'password' => '11111111',
-            'password_confirmation' => '11111111',
-        ],[
-            'Accept' => 'application/json'
-        ]);
-        
+        $response = $this->post('/api/auth/login', $reqBody, $this->commonHeaders); 
+
         $response->assertJson([
                 'status' => true,
                 'data' => [
-                    'name' => $name,
-                    'email' => $email,
+                    'token_type' => 'Bearer',
+                    'user' => [
+                        'name' => $this->user->name,
+                        'email' => $this->user->email,
+                    ],
                 ],
                 'error' => null,
                 'message' => 'OK'
             ])
-            ->assertStatus(Response::HTTP_CREATED);
+            ->assertStatus(Response::HTTP_OK);
     }
 }

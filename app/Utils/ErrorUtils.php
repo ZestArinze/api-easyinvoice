@@ -8,16 +8,15 @@ class ErrorUtils {
     /**
      * 
      * format and return validation messages
+     * @return array
      */
-    public static function formatErrorBlock(ValidationException $exception) {
+    public static function formatErrorBlock(ValidationException $exception): array {
         // extract errors into array
         $errors = $exception->validator->errors()->toArray();
         $errorResponse = [];
 
-        // loop over the errors and save them in array in a desired way
         foreach ($errors as $field => $message) {
             $errorField = ['field' => $field];
-
             foreach ($message as $key => $msg) {
                 if ($key) {
                     $errorField['message' . $key] = $msg;
@@ -25,7 +24,6 @@ class ErrorUtils {
                     $errorField['message'] = $msg;
                 }
             }
-
             $errorResponse[] = $errorField;
         }
 

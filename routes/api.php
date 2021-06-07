@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SignUpController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,5 +20,6 @@ Route::group([
 	'prefix' => 'auth'
 ], function() {
 	Route::post('signup', [SignUpController::class, 'register']);
+    Route::post('login', [LoginController::class, 'login']);
 });
 
