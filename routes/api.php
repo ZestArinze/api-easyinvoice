@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SignUpController;
 use Illuminate\Http\Request;
@@ -23,3 +24,10 @@ Route::group([
     Route::post('login', [LoginController::class, 'login']);
 });
 
+
+Route::group([
+	'middleware' => 'auth:sanctum'
+], function() {
+	Route::post('businesses', [BusinessController::class, 'store']);
+    Route::get('businesses/overview', [BusinessController::class, 'show']);
+});
