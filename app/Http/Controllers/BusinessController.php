@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 class BusinessController extends Controller
 {
     /**
-     * create business. obeser associates business to
+     * create business. obeserver associates business to
      * the authenticated user
      * 
      * @param StoreBusinessRequest $storeBusinessRequest request
@@ -40,10 +40,9 @@ class BusinessController extends Controller
      */
     public function show(Request $request): JsonResponse {
         
-        $user = $request->user();
         $data = [
-            'user' => $user,
-            'businesses' => BusinessUser::where('user_id', $user->id)->count(),
+            'user' => $request->user(),
+            'businesses' => BusinessUser::where('user_id', $request->user()->id)->count(),
         ];
 
         return AppHttpUtils::appJsonResponse(true, Response::HTTP_OK, $data);

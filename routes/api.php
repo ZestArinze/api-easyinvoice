@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BusinessController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SignUpController;
 use Illuminate\Http\Request;
@@ -30,4 +31,8 @@ Route::group([
 ], function() {
 	Route::post('businesses', [BusinessController::class, 'store']);
     Route::get('businesses/overview', [BusinessController::class, 'show']);
+
+	Route::post('clients', [ClientController::class, 'store']);
+	Route::post('clients/search', [ClientController::class, 'search']);
+
 });
