@@ -26,7 +26,7 @@ class ClientService {
      */
     public static function generateUniqueId(): string {
         // get max ID in the table
-        $maxId = '' . Client::max('id');
+        $maxId = Client::max('id');
         $businessIdLen = 12;
         $businessId = '';
 

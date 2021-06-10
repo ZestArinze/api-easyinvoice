@@ -27,7 +27,7 @@ class ClientFactory extends Factory
             'email' => $this->faker->email,
             'address' => $this->faker->address,
             'phone_number' => $this->faker->phoneNumber,
-            'business_id' => $this->faker->randomDigit,
+            'business_id' => Business::factory(),
         ];
     }
 }

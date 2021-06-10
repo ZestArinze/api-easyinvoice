@@ -42,14 +42,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    // public function businesses() {
-    //     return $this->belongsToMany(Business::class);
-    // }
-
-    public function businesses()
-    {
-        return $this->belongsToMany(Business::class)
-                ->withTimestamps()
-                ->withPivot('business_user');
+    public function businesses() {
+        return $this->belongsToMany(Business::class);
     }
 }

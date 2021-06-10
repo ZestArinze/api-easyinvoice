@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SignUpController;
 use Illuminate\Http\Request;
@@ -35,4 +36,7 @@ Route::group([
 	Route::post('clients', [ClientController::class, 'store']);
 	Route::post('clients/search', [ClientController::class, 'search']);
 
+	Route::post('invoices', [InvoiceController::class, 'store']);
+	Route::patch('invoices', [InvoiceController::class, 'update']);
+	Route::post('invoices/search', [InvoiceController::class, 'search']);
 });

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\PhoneNumber;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreBusinessRequest extends FormRequest
 {
@@ -28,7 +29,7 @@ class StoreBusinessRequest extends FormRequest
             'business_name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'address' => 'required|string|max:1000',
-            'phone_number' => ['nullable', new PhoneNumber]
+            'phone_number' => ['nullable', new PhoneNumber],
         ];
     }
 }

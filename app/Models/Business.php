@@ -24,4 +24,15 @@ class Business extends Model
     public function users() {
         return $this->belongsToMany(User::class);
     }
+
+    public function invoices() {
+        return $this->belongsToMany(Invoice::class);
+    }
+
+    public function hasUser() {
+        return BusinessUser::where([
+            'user_id' => auth()->id(),
+            'business_id' => $this->id,
+        ])->first();
+    }
 }

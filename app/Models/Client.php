@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Client extends Model
 {
@@ -15,6 +16,10 @@ class Client extends Model
         'address',
         'phone_number', 
     ];
+
+    public function business() {
+        return $this->belongsTo(Business::class);
+    }
 
     public static function clientRecord($email, $businessId) {
         return Client::where([
