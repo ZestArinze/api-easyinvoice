@@ -28,8 +28,8 @@ class LoginService {
        $user = User::where('email', $this->request->email)->first();
        if(!$user) {
         return AppHttpUtils::appJsonResponse(
-            true, 
-            Response::HTTP_OK, 
+            false, 
+            Response::HTTP_BAD_REQUEST, 
             null,
             null,
             'Invalid Credentials.');
@@ -47,8 +47,8 @@ class LoginService {
         }
 
         return AppHttpUtils::appJsonResponse(
-            true, 
-            Response::HTTP_OK, 
+            false, 
+            Response::HTTP_BAD_REQUEST, 
             null,
             null,
             'Invalid Credentials.');
