@@ -33,27 +33,33 @@ class BusinessTableSeeder extends Seeder
             ]);
         }
         
-        $businesses = Business::factory($faker->numberBetween(2,3))->create();
-        foreach($businesses as $business) {
-            $clients = Client::factory($faker->numberBetween(3,4))->create([
+        for($i = 0; $i < 5; $i++) {
+            $business = Business::factory()->create();
+            
+            $client = Client::factory()->create([
                 'business_id' => $business->id,
             ]);
 
-            foreach($clients as $client) {
+            for($j = 0; $j < 3; $j++) {
+                
                 BusinessUser::factory()->create([
                     'user_id' => $user->id,
                     'business_id' => $business->id,
                 ]);
-                Invoice::factory($faker->randomElement([2, 3]))
-                        ->has(InvoiceItem::factory()->count($faker->randomElement([4, 5, 6, 7, 8])))
+                $invoice = Invoice::factory()
                         ->create([
                             'client_id' => $client->id,
                             'business_id' => $business->id,
                         ]);
+
+                $count = $faker->numberBetween(7, 14);
+                for($k = 0; $k < $count; $k++) {
+                    InvoiceItem::factory()->create([
+                        'invoice_id' => $invoice->id
+                    ]);
+                }   
             }
         }
-
-
 
 
         $users = User::factory()
