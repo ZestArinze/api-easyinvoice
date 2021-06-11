@@ -20,6 +20,23 @@ class BusinessTableSeeder extends Seeder
     {
         $faker = Factory::create();
 
+
+        // test user
+        $user = User::factory()->create([
+            'email' => 'test@example.com',
+            'password' => bcrypt('secret')
+        ]);
+        $businesses = Business::factory(5)->create();
+        foreach($businesses as $business) {
+            Client::factory($faker->numberBetween(5, 10))->create([
+                'business_id' => $business->id,
+            ]);
+            BusinessUser::factory()->create([
+                'user_id' => $user->id,
+                'business_id' => $business->id,
+            ]);
+        }
+
         $users = User::factory()
             ->count($faker->numberBetween(1, 3))
             ->create();
