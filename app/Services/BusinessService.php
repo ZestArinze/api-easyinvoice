@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Business;
 use App\Models\BusinessUser;
+use Illuminate\Http\Request;
 
 class BusinessService {
 
@@ -39,5 +40,21 @@ class BusinessService {
         }
 
         return $businessId;
+    }
+
+    public function overview(Request $request) {
+
+        $clientService = new ClientService();        
+
+        $user = $request->user();
+        $businessCount = $user->businesses()->count();
+
+        $clientsCount = $clientService->getClients($request, true);
+
+        return [
+            'user' => $user,
+            'business_count' => $businessCount,
+            'client_count' => $clientsCount,
+        ];
     }
 }

@@ -38,16 +38,8 @@ class BusinessController extends Controller
      */
     public function overview(Request $request): JsonResponse {
         
-        $user = $request->user();
-        // $businessCount = $user->businesses()->get();
-        $businessCount = $user->businesses()->count();
-
-        $data = [
-            'user' => $user,
-            'business_count' => $businessCount,
-        ];
-
-        return AppHttpUtils::appJsonResponse(true, Response::HTTP_OK, $data);
+        $businessService = new BusinessService();
+        return AppHttpUtils::appJsonResponse(true, Response::HTTP_OK, $businessService->overview($request));
     }
 
     /**

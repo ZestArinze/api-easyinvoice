@@ -24,13 +24,18 @@ class ClientService {
         $businessInvoice->save();
     }
 
-    public function getClients(Request $request) {
-       return DB::table('clients')
+    public function getClients(Request $request, $getCount = false) {
+       $result = DB::table('clients')
                     ->leftJoin('businesses', 'businesses.id', 'clients.business_id')
                     ->leftJoin('business_user', 'business_user.business_id', 'businesses.id')
                     ->where('business_user.user_id', '=', $request->user()->id)
-                    ->select('clients.*')
-                    ->get();
+                    ->select('clients.*');
+
+        if($getCount) {
+            return $result->count();
+        }
+
+        return $result->get();
     }
 
     public function searchClients(SearchClientRequest $request) {
