@@ -109,7 +109,7 @@ class BusinessTest extends TestCase
                         "name" => $this->user->name,
                         "email" => $this->user->email,
                     ],
-                    "businesses" => 0
+                    "business_count" => 0
                 ],
                 'error' => null,
                 'message' => 'OK'
