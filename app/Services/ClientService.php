@@ -2,13 +2,17 @@
 
 namespace App\Services;
 
+use App\Http\Requests\SearchClientRequest;
 use App\Http\Requests\StoreClientRequest;
 use App\Models\BusinessUser;
 use App\Models\Client;
 use App\Models\ClientInvoice;
 use App\Utils\AppHttpUtils;
 use App\Utils\DataUtils;
+use App\Utils\DbUtils;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
 class ClientService {
@@ -19,6 +23,25 @@ class ClientService {
         $businessInvoice->business_id = $this->business->id;
         $businessInvoice->save();
     }
+
+    public function getClients(Request $request) {
+       return DB::table('clients')
+                    ->leftJoin('businesses', 'businesses.id', 'clients.business_id')
+                    ->leftJoin('business_user', 'business_user.business_id', 'businesses.id')
+                    ->where('business_user.user_id', '=', $request->user()->id)
+                    ->select('clients.*')
+                    ->get();
+    }
+
+    public function searchClients(SearchClientRequest $request) {
+        return DB::table('clients')
+                     ->leftJoin('businesses', 'businesses.id', 'clients.business_id')
+                     ->leftJoin('business_user', 'business_user.business_id', 'businesses.id')
+                     ->where('business_user.user_id', '=', $request->user()->id)
+                     ->where(DbUtils::sqlLikeQuery($request->validated()))
+                     ->select('clients.*')
+                     ->get();
+     }
 
     /**
      * 

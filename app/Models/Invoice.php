@@ -22,4 +22,8 @@ class Invoice extends Model
     ];
 
     protected $dates = ['due_date'];
+
+    public function invoiceItems() {
+        return $this->hasMany(InvoiceItem::class);
+    }
 }

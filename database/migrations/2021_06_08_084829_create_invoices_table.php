@@ -20,8 +20,8 @@ class CreateInvoicesTable extends Migration
             $table->double('subtotal')->default(0);
             $table->double('vat')->default(0);
             $table->double('total');
-            $table->double('total_paid');
-            $table->string('status');
+            $table->double('total_paid')->default(0);
+            $table->string('status')->nullable();
             $table->dateTime('due_date')->nullable();
             $table->foreignId('currency_id')->constrained();
             $table->foreignId('client_id')->constrained();

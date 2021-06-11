@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Requests\SearchInvoiceRequest;
 use App\Http\Requests\StoreInvoiceRequest;
 use App\Http\Requests\UpdateInvoiceRequest;
 use App\Models\Business;
@@ -9,6 +10,8 @@ use App\Models\Client;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Utils\AppHttpUtils;
+use App\Utils\DbUtils;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +19,43 @@ use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class InvoiceService {
+
+    public function getInvoices(Request $request, $id = null) {
+        $result = DB::table('invoices')
+                    ->leftJoin('businesses', 'businesses.id', 'invoices.business_id')
+                    ->leftJoin('business_user', 'business_user.business_id', 'businesses.id')
+                    ->where('business_user.user_id', '=', $request->user()->id)
+                    ;
+
+        // get the matching record
+        if($id) {
+            $result = $result
+                ->where('invoices.id', $id)
+                ->select('invoices.*')
+                ->first();
+
+            // @TODO optimze SQL query
+            if($result) {
+                $result->invoice_items = InvoiceItem::where('invoice_id', $result->id)->get();
+            }
+
+            return $result;
+        }
+        else {
+            return $result->select('invoices.*')->get();
+        } 
+     }
+
+     public function searchInvoices(SearchInvoiceRequest $request) {
+        return DB::table('invoices')
+                     ->leftJoin('businesses', 'businesses.id', 'invoices.business_id')
+                     ->leftJoin('business_user', 'business_user.business_id', 'businesses.id')
+                     ->where('business_user.user_id', '=', $request->user()->id)
+                     ->where(DbUtils::sqlLikeQuery($request->validated()))
+                     ->select('invoices.*')
+                     ->get();
+     }
+
 
     /**
      * 
@@ -82,6 +122,12 @@ class InvoiceService {
 
             DB::commit();
         } catch(Throwable $e) {
+
+            // dump([
+            //     $e->getMessage(),
+            //     $e->getFile(),
+            //     $e->getLine()
+            // ]);
             DB::rollBack();
         }
 

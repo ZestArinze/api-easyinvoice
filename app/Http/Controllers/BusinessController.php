@@ -23,7 +23,6 @@ class BusinessController extends Controller
     public function store(StoreBusinessRequest $storeBusinessRequest): JsonResponse {
         // Retrieve the validated input data
         $validated = $storeBusinessRequest->validated();
-
         $business = new Business($validated);
         $business->business_id = BusinessService::generateUniqueId();
         $business->save();
@@ -34,17 +33,30 @@ class BusinessController extends Controller
     /**
      * get business and associated data
      * 
-     * @param App\Models\User $user request
-     * @param  string  $id
+     * @param Illuminate\Http\Request $request
      * @return Illuminate\Http\JsonResponse
      */
-    public function show(Request $request): JsonResponse {
+    public function overview(Request $request): JsonResponse {
         
+        $user = $request->user();
+        // $businessCount = $user->businesses()->get();
+        $businessCount = $user->businesses()->count();
+
         $data = [
-            'user' => $request->user(),
-            'businesses' => BusinessUser::where('user_id', $request->user()->id)->count(),
+            'user' => $user,
+            'business_count' => $businessCount,
         ];
 
         return AppHttpUtils::appJsonResponse(true, Response::HTTP_OK, $data);
+    }
+
+    /**
+     * get businesses the user belongs to
+     * 
+     * @param Illuminate\Http\Request $request
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function index(Request $request): JsonResponse {
+        return AppHttpUtils::appJsonResponse(true, Response::HTTP_OK, $request->user()->businesses);
     }
 }

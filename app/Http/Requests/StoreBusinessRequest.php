@@ -27,7 +27,7 @@ class StoreBusinessRequest extends FormRequest
     {
         return [
             'business_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'email' => 'required|email|max:255|unique:businesses,email',
             'address' => 'required|string|max:1000',
             'phone_number' => ['nullable', new PhoneNumber],
         ];

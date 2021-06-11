@@ -9,6 +9,7 @@ use App\Services\ClientService;
 use App\Utils\AppHttpUtils;
 use App\Utils\DbUtils;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class ClientController extends Controller
@@ -33,8 +34,21 @@ class ClientController extends Controller
      * @return Illuminate\Http\JsonResponse
      */
     public function search(SearchClientRequest $searchClientRequest): JsonResponse {
-        $clients = Client::where(DbUtils::sqlLikeQuery($searchClientRequest->validated()))->get();
+        $clientService = new ClientService();
 
-        return AppHttpUtils::appJsonResponse(true, Response::HTTP_OK, $clients);
+        return AppHttpUtils::appJsonResponse(true, Response::HTTP_OK, $clientService->searchClients($searchClientRequest));
+    }
+
+    /**
+     * get clients for businesses the user belongs to
+     * 
+     * @param Illuminate\Http\Request $request
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function index(Request $request): JsonResponse {
+
+        $clientService = new ClientService();
+
+        return AppHttpUtils::appJsonResponse(true, Response::HTTP_OK, $clientService->getClients($request));
     }
 }

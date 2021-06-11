@@ -10,6 +10,7 @@ use App\Services\InvoiceService;
 use App\Utils\AppHttpUtils;
 use App\Utils\DbUtils;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class InvoiceController extends Controller
@@ -46,8 +47,32 @@ class InvoiceController extends Controller
      * @return Illuminate\Http\JsonResponse
      */
     public function search(SearchInvoiceRequest $searchInvoiceRequest): JsonResponse {
-        $invoices = Invoice::where(DbUtils::sqlLikeQuery($searchInvoiceRequest->validated()))->get();
+        $invoiceService = new InvoiceService();
 
-        return AppHttpUtils::appJsonResponse(true, Response::HTTP_OK, $invoices);
+        return AppHttpUtils::appJsonResponse(true, Response::HTTP_OK, $invoiceService->searchInvoices($searchInvoiceRequest));
+    }
+
+    /**
+     * get invoices for businesses the user belongs to
+     * 
+     * @param Illuminate\Http\Request $request
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function index(Request $request): JsonResponse {
+        $invoiceService = new InvoiceService();
+
+        return AppHttpUtils::appJsonResponse(true, Response::HTTP_OK, $invoiceService->getInvoices($request));
+    }
+
+    /**
+     * get sinegle invoice for the business the user belongs to
+     * 
+     * @param Illuminate\Http\Request $request
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function show(Request $request, $id): JsonResponse {
+        $invoiceService = new InvoiceService();
+
+        return AppHttpUtils::appJsonResponse(true, Response::HTTP_OK, $invoiceService->getInvoices($request, $id));
     }
 }

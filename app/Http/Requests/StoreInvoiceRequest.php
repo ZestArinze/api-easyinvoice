@@ -23,7 +23,6 @@ class StoreInvoiceRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
-
         $currency = Currency::first();
         $this->merge([
             // @TODO add default currncy in Settings

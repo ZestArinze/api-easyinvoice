@@ -7,19 +7,13 @@ use App\Models\BusinessUser;
 
 class BusinessService {
 
-    private Business $business;
-
-    public function __construct(Business $business)
-    {
-        $this->business = $business;   
-    }
-
-    public function associateBusinessWithUser() {
+    public function associateBusinessWithUser(Business $business) {
         $businessUser = new BusinessUser();
         $businessUser->user_id = auth()->id();
-        $businessUser->business_id = $this->business->id;
+        $businessUser->business_id = $business->id;
         $businessUser->save();
     }
+    
 
     /**
      * 

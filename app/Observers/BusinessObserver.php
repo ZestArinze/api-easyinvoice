@@ -15,8 +15,8 @@ class BusinessObserver
      */
     public function created(Business $business)
     {
-        $businessService = new BusinessService($business);
-        $businessService->associateBusinessWithUser();
+        $businessService = new BusinessService();
+        $businessService->associateBusinessWithUser($business);
     }
 
     /**
