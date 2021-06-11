@@ -15,14 +15,14 @@ class CurrencyTableSeeder extends Seeder
     public function run()
     {
         $currencies = [
-            'US Dollar' => '$',
-            'Naira' => '₦',
+            'USD' => 'US Dollar',
+            'NGN' => 'Naira',
         ];
 
-        foreach ($currencies as $name => $symbol) {
+        foreach ($currencies as $symbol => $name) {
             Currency::updateOrCreate([
-                'name' => $name,
                 'symbol' => $symbol,
+                'name' => $name,
             ]);
         }
     }

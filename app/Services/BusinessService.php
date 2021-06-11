@@ -8,6 +8,10 @@ use App\Models\BusinessUser;
 class BusinessService {
 
     public function associateBusinessWithUser(Business $business) {
+
+        // @TODO this is a workaround for dabatase seeder
+        if(!auth()->id()) return;
+
         $businessUser = new BusinessUser();
         $businessUser->user_id = auth()->id();
         $businessUser->business_id = $business->id;

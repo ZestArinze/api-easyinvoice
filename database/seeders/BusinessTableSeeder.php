@@ -33,11 +33,9 @@ class BusinessTableSeeder extends Seeder
             ]);
 
             BusinessUser::factory()->create([
-                'user' => $user->id,
+                'user_id' => $user->id,
                 'business_id' => $business->id,
             ]);
-
-            
         }
     }
 }
